@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vlad Kuznetsov — Full-Stack Developer</title>
+<meta name="description" content="Portfolio of Vlad Kuznetsov, a full-stack developer working with JavaScript, TypeScript, React, Python and SQL.">
+<style>
+  :root{
+    --bg:#0d1117;
+    --panel:#10151c;
+    --titlebar:#161b22;
+    --border:#262c36;
+    --text:#e6edf3;
+    --muted:#8b949e;
+    --muted-2:#6e7681;
+    --amber:#ffb454;
+    --amber-dim:#caa067;
+    --md:#79c0ff;
+    --json:#e3b341;
+    --tsx:#56d8c4;
+    --sh:#7ee787;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important;}
+  }
+
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'JetBrains Mono','Fira Code',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:15px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  a{color:var(--amber); text-decoration:none;}
+  a:hover{text-decoration:underline;}
+  a:focus-visible, button:focus-visible{
+    outline:2px solid var(--amber);
+    outline-offset:2px;
+    border-radius:2px;
+  }
+
+  .window{
+    max-width:980px;
+    margin:24px auto 80px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    overflow:hidden;
+    box-shadow:0 30px 60px -20px rgba(0,0,0,0.6);
+    background:var(--panel);
+  }
+
+  /* Title bar */
+  .titlebar{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:10px 14px;
+    background:var(--titlebar);
+    border-bottom:1px solid var(--border);
+  }
+  .dots{display:flex; gap:7px;}
+  .dot{width:11px; height:11px; border-radius:50%;}
+  .dot.red{background:#ff5f56;}
+  .dot.yellow{background:#ffbd2e;}
+  .dot.green{background:#27c93f;}
+  .titlebar-label{
+    flex:1;
+    text-align:center;
+    color:var(--muted);
+    font-size:12.5px;
+    letter-spacing:0.02em;
+  }
+
+  /* Tabs */
+  .tabs{
+    display:flex;
+    overflow-x:auto;
+    background:var(--titlebar);
+    border-bottom:1px solid var(--border);
+    scrollbar-width:none;
+  }
+  .tabs::-webkit-scrollbar{display:none;}
+  .tab{
+    appearance:none;
+    background:transparent;
+    border:none;
+    border-right:1px solid var(--border);
+    color:var(--muted);
+    font-family:inherit;
+    font-size:13px;
+    padding:11px 18px;
+    cursor:pointer;
+    white-space:nowrap;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    transition:color .15s ease, background .15s ease;
+  }
+  .tab .dotfile{width:6px; height:6px; border-radius:50%; flex-shrink:0;}
+  .tab[data-lang="md"] .dotfile{background:var(--md);}
+  .tab[data-lang="json"] .dotfile{background:var(--json);}
+  .tab[data-lang="tsx"] .dotfile{background:var(--tsx);}
+  .tab[data-lang="sh"] .dotfile{background:var(--sh);}
+  .tab:hover{color:var(--text); background:rgba(255,255,255,0.03);}
+  .tab.active{
+    color:var(--text);
+    background:var(--bg);
+    box-shadow:inset 0 -2px 0 0 var(--amber);
+  }
+
+  main{background:var(--bg);}
+
+  .file{
+    display:none;
+    padding:42px clamp(20px,5vw,56px) 56px;
+    border-left:3px solid transparent;
+  }
+  .file.active{display:block; animation:fadeIn .35s ease;}
+  .file[data-lang="md"]{border-left-color:var(--md);}
+  .file[data-lang="json"]{border-left-color:var(--json);}
+  .file[data-lang="tsx"]{border-left-color:var(--tsx);}
+  .file[data-lang="sh"]{border-left-color:var(--sh);}
+
+  @keyframes fadeIn{
+    from{opacity:0; transform:translateY(6px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+
+  .filetag{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    font-size:11.5px;
+    color:var(--muted-2);
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    margin-bottom:28px;
+  }
+  .file[data-lang="md"] .filetag{color:var(--md);}
+  .file[data-lang="json"] .filetag{color:var(--json);}
+  .file[data-lang="tsx"] .filetag{color:var(--tsx);}
+  .file[data-lang="sh"] .filetag{color:var(--sh);}
+
+  /* ---------- HERO / about.md ---------- */
+  .comment{color:var(--muted-2);}
+  h1{
+    font-size:clamp(28px,4.2vw,40px);
+    margin:0 0 6px;
+    color:var(--text);
+    letter-spacing:-0.01em;
+  }
+  .role{
+    color:var(--amber);
+    font-size:16px;
+    margin:0 0 28px;
+  }
+
+  .terminal{
+    background:#0a0d12;
+    border:1px solid var(--border);
+    border-radius:6px;
+    padding:20px 22px;
+    margin:0 0 30px;
+    font-size:13.5px;
+    line-height:1.85;
+    overflow-x:auto;
+  }
+  .prompt{color:var(--sh);}
+  .out{color:var(--muted);}
+  .cursor{
+    display:inline-block;
+    width:8px; height:15px;
+    background:var(--amber);
+    margin-left:2px;
+    vertical-align:-2px;
+    animation:blink 1s step-end infinite;
+  }
+  @keyframes blink{50%{opacity:0;}}
+
+  .lede{
+    color:var(--muted);
+    max-width:60ch;
+    margin:0 0 32px;
+  }
+
+  .btnrow{display:flex; flex-wrap:wrap; gap:12px; margin-bottom:8px;}
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:10px 18px;
+    border-radius:6px;
+    font-size:13.5px;
+    border:1px solid var(--border);
+    color:var(--text);
+    transition:border-color .15s ease, transform .15s ease, background .15s ease;
+  }
+  .btn:hover{border-color:var(--amber-dim); transform:translateY(-1px); text-decoration:none;}
+  .btn.primary{background:var(--amber); color:#1a1300; border-color:var(--amber); font-weight:600;}
+  .btn.primary:hover{background:var(--amber-dim); border-color:var(--amber-dim);}
+
+  .prose{color:var(--muted); max-width:64ch;}
+  .prose strong{color:var(--text); font-weight:600;}
+  .prose p{margin:0 0 16px;}
+  .prose h2{
+    color:var(--text);
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:var(--md);
+    margin:30px 0 12px;
+  }
+
+  /* ---------- SKILLS / skills.json ---------- */
+  .skillblock{margin-bottom:26px;}
+  .skillkey{
+    color:var(--json);
+    font-size:13px;
+    margin:0 0 10px;
+  }
+  .skillkey .punct{color:var(--muted-2);}
+  .pillrow{display:flex; flex-wrap:wrap; gap:8px;}
+  .pill{
+    border:1px solid var(--border);
+    background:rgba(255,255,255,0.02);
+    color:var(--text);
+    padding:6px 12px;
+    border-radius:5px;
+    font-size:12.5px;
+  }
+  .pill.learning{color:var(--muted); border-style:dashed;}
+
+  /* ---------- PROJECTS / projects.tsx ---------- */
+  .projintro{color:var(--muted); max-width:60ch; margin:0 0 30px;}
+  .projects{display:grid; gap:18px;}
+  .card{
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:24px;
+    background:rgba(255,255,255,0.015);
+  }
+  .card-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-bottom:10px;
+  }
+  .card-title{color:var(--tsx); font-size:16px; margin:0;}
+  .card-title .comment-slash{color:var(--muted-2); font-weight:400;}
+  .stack{color:var(--muted-2); font-size:12px;}
+  .card p{color:var(--muted); margin:0 0 16px; max-width:62ch;}
+  .card-links{display:flex; gap:18px; font-size:13px;}
+  .placeholder-note{
+    display:inline-block;
+    margin-top:10px;
+    font-size:11.5px;
+    color:var(--muted-2);
+    border-top:1px dashed var(--border);
+    padding-top:10px;
+  }
+  .card.more{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-style:dashed;
+    color:var(--muted);
+    min-height:80px;
+  }
+
+  /* ---------- CONTACT / contact.sh ---------- */
+  .contact-terminal .out a{color:var(--text);}
+  .contact-terminal .out a:hover{color:var(--amber);}
+
+  /* Status bar */
+  .statusbar{
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:8px;
+    background:var(--titlebar);
+    border-top:1px solid var(--border);
+    color:var(--muted-2);
+    font-size:11.5px;
+    padding:8px 16px;
+  }
+  .statusbar span{white-space:nowrap;}
+
+  @media (max-width:560px){
+    .window{margin:0; border-radius:0; border-left:none; border-right:none;}
+    .file{padding:32px 18px 44px;}
+    .card-links{flex-wrap:wrap;}
+  }
+</style>
+</head>
+<body>
+
+<div class="window">
+
+  <div class="titlebar">
+    <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+    <div class="titlebar-label">vlad@portfolio — ~/work</div>
+    <div style="width:53px"></div>
+  </div>
+
+  <nav class="tabs" role="tablist" aria-label="Portfolio sections">
+    <button class="tab active" data-target="about" data-lang="md" role="tab" aria-selected="true"><span class="dotfile"></span>about.md</button>
+    <button class="tab" data-target="skills" data-lang="json" role="tab" aria-selected="false"><span class="dotfile"></span>skills.json</button>
+    <button class="tab" data-target="projects" data-lang="tsx" role="tab" aria-selected="false"><span class="dotfile"></span>projects.tsx</button>
+    <button class="tab" data-target="contact" data-lang="sh" role="tab" aria-selected="false"><span class="dotfile"></span>contact.sh</button>
+  </nav>
+
+  <main>
+
+    <!-- ABOUT -->
+    <section id="about" class="file active" data-lang="md" role="tabpanel">
+      <div class="filetag">● about.md — preview</div>
+
+      <h1>Vlad Kuznetsov</h1>
+      <p class="role">Full-Stack Developer (Junior)</p>
+
+      <div class="terminal">
+        <div><span class="prompt">$</span> whoami</div>
+        <div class="out" id="typedLine1"></div>
+        <div style="margin-top:10px;"><span class="prompt">$</span> cat status.txt</div>
+        <div class="out" id="typedLine2"></div>
+      </div>
+
+      <div class="btnrow">
+        <a class="btn primary" href="#projects" data-tabswitch="projects">View Projects</a>
+        <!-- REPLACE the href below with a link to your actual resume PDF -->
+        <a class="btn" href="#" target="_blank" rel="noopener">Download Resume</a>
+        <!-- REPLACE with your real GitHub URL -->
+        <a class="btn" href="https://github.com/vladkuz06" target="_blank" rel="noopener">GitHub</a>
+        <!-- REPLACE with your real LinkedIn URL -->
+        <a class="btn" href="https://www.linkedin.com/in/vlad-kuznetsov06/" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+
+      <div class="prose" style="margin-top:36px;">
+        <h2>// who I am</h2>
+        <p>I'm a full-stack developer based in Canada. I recently finished a full web development curriculum covering HTML, CSS, JavaScript, TypeScript, React, Python, and SQL — and instead of stopping at the certificates, I kept building until the projects actually worked the way I wanted them to.</p>
+
+        <h2>// what I'm good at</h2>
+        <p>Turning a vague feature request into working code. Debugging the weird stuff — state bugs, timing issues, test-runner quirks — until I understand <em>why</em> something broke, not just how to silence the error. Reading documentation instead of guessing.</p>
+
+        <h2>// what I'm looking for</h2>
+        <p>My first developer role. <strong>Open to junior full-stack, frontend, or backend positions</strong> — remote or across Western Canada (British Columbia, Alberta, Saskatchewan, Manitoba) — where I can keep shipping real things and learning fast.</p>
+        <p>I'm also open to any possible opportunities or options in order to enhance my skills and gain more experience.</p>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="skills" class="file" data-lang="json" role="tabpanel">
+      <div class="filetag">● skills.json</div>
+
+      <div class="skillblock">
+        <p class="skillkey">"languages"<span class="punct">:</span></p>
+        <div class="pillrow">
+          <span class="pill">JavaScript</span>
+          <span class="pill">TypeScript</span>
+          <span class="pill">Python</span>
+          <span class="pill">SQL</span>
+          <span class="pill">HTML5</span>
+          <span class="pill">CSS3</span>
+        </div>
+      </div>
+
+      <div class="skillblock">
+        <p class="skillkey">"frontend"<span class="punct">:</span></p>
+        <div class="pillrow">
+          <span class="pill">React</span>
+          <span class="pill">Component State</span>
+          <span class="pill">Responsive Web Design</span>
+          <span class="pill">DOM APIs</span>
+          <span class="pill">Accessibility basics</span>
+        </div>
+      </div>
+
+      <div class="skillblock">
+        <p class="skillkey">"backend_and_data"<span class="punct">:</span></p>
+        <div class="pillrow">
+          <span class="pill">Python</span>
+          <span class="pill">SQL / relational data</span>
+          <span class="pill">REST APIs</span>
+          <span class="pill">JSON</span>
+        </div>
+      </div>
+
+      <div class="skillblock">
+        <p class="skillkey">"tools"<span class="punct">:</span></p>
+        <div class="pillrow">
+          <span class="pill">Git &amp; GitHub</span>
+          <span class="pill">VS Code</span>
+          <span class="pill">Chrome DevTools</span>
+          <span class="pill">npm</span>
+        </div>
+      </div>
+
+      <div class="skillblock">
+        <p class="skillkey">"currently_learning"<span class="punct">:</span></p>
+        <div class="pillrow">
+          <span class="pill learning">Flask / FastAPI</span>
+          <span class="pill learning">Testing (Jest/Pytest)</span>
+          <span class="pill learning">Deployment &amp; CI</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects" class="file" data-lang="tsx" role="tabpanel">
+      <div class="filetag">● projects.tsx</div>
+      <p class="projintro">A few projects from my recent build phase. <strong style="color:var(--muted)">Swap the links and screenshots below for your real repos and live demos before publishing.</strong></p>
+
+      <div class="projects">
+
+        <article class="card">
+          <div class="card-head">
+            <h3 class="card-title"><span class="comment-slash">// </span>Digital Pet Game</h3>
+            <span class="stack">React · TypeScript</span>
+          </div>
+          <p>An idle pet-care game where hunger and happiness decay over time. Built around TypeScript enums for pet states, derived UI state, and interval-based timers — with cleanup logic to avoid stacked timers on re-render.</p>
+          <div class="card-links">
+            <a href="#" target="_blank" rel="noopener">Live demo →</a>
+            <a href="#" target="_blank" rel="noopener">Source →</a>
+          </div>
+          <div class="placeholder-note">REPLACE: link + 1-line note on a bug you solved (e.g. timer cleanup, state desync)</div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <h3 class="card-title"><span class="comment-slash">// </span>TypeScript Flashcard App</h3>
+            <span class="stack">TypeScript · React</span>
+          </div>
+          <p>A study app for spaced-repetition-style review. Typed data models for decks and cards, with component state tracking progress through a session and correctly handling edge cases like empty decks.</p>
+          <div class="card-links">
+            <a href="#" target="_blank" rel="noopener">Live demo →</a>
+            <a href="#" target="_blank" rel="noopener">Source →</a>
+          </div>
+          <div class="placeholder-note">REPLACE: link + 1-line note on a TypeScript decision you made and why</div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <h3 class="card-title"><span class="comment-slash">// </span>OTP Generator</h3>
+            <span class="stack">JavaScript</span>
+          </div>
+          <p>A one-time-password generator with a live countdown timer. The core challenge was timing precision and making sure intervals were torn down cleanly instead of leaking on unmount.</p>
+          <div class="card-links">
+            <a href="#" target="_blank" rel="noopener">Live demo →</a>
+            <a href="#" target="_blank" rel="noopener">Source →</a>
+          </div>
+          <div class="placeholder-note">REPLACE: link + 1-line note on the trickiest part of getting timing right</div>
+        </article>
+
+        <a class="card more" href="https://github.com/vladkuz06?tab=repositories" target="_blank" rel="noopener">
+          More projects on GitHub →
+        </a>
+
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="file" data-lang="sh" role="tabpanel">
+      <div class="filetag">● contact.sh</div>
+
+      <div class="terminal contact-terminal">
+        <!-- REPLACE all three lines below with your real email / GitHub / LinkedIn -->
+        <div><span class="prompt">$</span> open mailto:<a href="mailto:[vladyslavk22@gmail.com]">[vladyslavk22@gmail.com]</a></div>
+        <div style="margin-top:8px;"><span class="prompt">$</span> open <a href="https://github.com/vladkuz06" target="_blank" rel="noopener">github.com/vladkuz06</a></div>
+        <div style="margin-top:8px;"><span class="prompt">$</span> open <a href="https://www.linkedin.com/in/vlad-kuznetsov06/" target="_blank" rel="noopener">linkedin.com/in/vlad-kuznetsov06</a><span class="cursor"></span></div>
+      </div>
+
+      <p class="prose">Currently looking for a first developer role. Reach out directly by email, or find the code behind everything on this page on GitHub.</p>
+
+      <div class="btnrow">
+        <a class="btn primary" href="mailto:[vladyslavk22@gmail.com]">Email Me</a>
+        <a class="btn" href="https://github.com/vladkuz06" target="_blank" rel="noopener">GitHub</a>
+        <a class="btn" href="https://www.linkedin.com/in/vlad-kuznetsov06/" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="statusbar">
+    <span>⎇ main</span>
+    <span>UTF-8 · Spaces: 2</span>
+    <span>© 2026 Vlad Kuznetsov</span>
+  </div>
+
+</div>
+
+<script>
+  // Tab switching
+  const tabs = document.querySelectorAll('.tab');
+  const files = document.querySelectorAll('.file');
+
+  function activate(target){
+    tabs.forEach(t => {
+      const isMatch = t.dataset.target === target;
+      t.classList.toggle('active', isMatch);
+      t.setAttribute('aria-selected', isMatch ? 'true' : 'false');
+    });
+    files.forEach(f => f.classList.toggle('active', f.id === target));
+  }
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => activate(tab.dataset.target));
+  });
+
+  document.querySelectorAll('[data-tabswitch]').forEach(el => {
+    el.addEventListener('click', (e) => {
+      e.preventDefault();
+      activate(el.dataset.tabswitch);
+    });
+  });
+
+  // Typing effect for hero terminal
+  function typeLine(el, text, speed, done){
+    let i = 0;
+    el.textContent = '';
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(reduced){ el.textContent = text; if(done) done(); return; }
+    const timer = setInterval(() => {
+      el.textContent += text.charAt(i);
+      i++;
+      if(i >= text.length){
+        clearInterval(timer);
+        if(done) done();
+      }
+    }, speed);
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const l1 = document.getElementById('typedLine1');
+    const l2 = document.getElementById('typedLine2');
+    typeLine(l1, '> Vlad Kuznetsov — Full-Stack Developer', 28, () => {
+      setTimeout(() => {
+
+
+
+
+        typeLine(l2, '> Finished a JS/TS/React/Python/SQL build. Open to my first junior dev role.', 18);
+      }, 250);
+    });
+  });
+</script>
+
+</body>
+</html>
